@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ISSIN YID-NEƔ</title>
+  
+  <!-- Style pour le lecteur moderne Plyr -->
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+  
   <style>
     * {
       margin: 0;
@@ -20,39 +24,30 @@
 
     header {
       background: rgb(0, 162, 255);
-      padding: 2px;
+      padding: 15px;
       text-align: center;
-      box-shadow: 0 4px 2px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
     .container {
       padding: 20px;
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 0 auto;
     }
 
-    h2 {
-      margin-bottom: 20px;
-      text-align: center;
-      font-size: 28px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    }
-
-    /* SECTION LECTEUR VIDEO CENTRÉ */
+    /* LECTEUR MODERNE - Personnalisation */
     .player-container {
-      display: flex;
-      justify-content: center;
       margin-bottom: 40px;
-      width: 100%;
+      border-radius: 20px;
+      overflow: hidden; /* Pour que les coins de la vidéo soient arrondis */
+      border: 5px solid white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      background-color: black;
     }
 
-    video {
-      width: 100%;
-      max-width: 800px; /* Limite la taille sur ordinateur */
-      border-radius: 20px;
-      border: 5px solid white;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      background-color: black;
+    /* Override Plyr colors to match your blue theme */
+    :root {
+      --plyr-color-main: #00a2ff;
     }
 
     /* GRILLE DES FILMS */
@@ -64,30 +59,31 @@
 
     .card {
       background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(8px);
       border-radius: 15px;
       overflow: hidden;
-      transition: transform 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       cursor: pointer;
-      border: 2px solid transparent;
+      border: 2px solid rgba(255, 255, 255, 0.2);
     }
 
     .card:hover {
-      transform: scale(1.05);
+      transform: translateY(-10px);
       border-color: #00ff40;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
     }
 
     .card img {
       width: 100%;
-      height: 150px;
+      height: 160px;
       object-fit: cover;
     }
 
     .card h3 {
-      padding: 15px;
+      padding: 12px;
       text-align: center;
-      font-size: 18px;
-      background: rgba(0, 0, 0, 0.6);
+      font-size: 16px;
+      background: rgba(0, 0, 0, 0.7);
     }
 
     footer {
@@ -103,62 +99,80 @@
 <body>
 
 <header>
-  <img src="issin yid-neɣ.png" alt="Colorful rounded letters reading ISSIN YID-NEƔ on a dark background" style="width: 320px; height: auto;">
+  <img src="issin yid-neɣ.png" alt="ISSIN YID-NEƔ" style="width: 280px; height: auto;">
 </header>
 
 <div class="container">
 
-  <h2><img src="i yigerdan.png" alt="Colorful rounded letters reading i yigerdan on a dark background" style="width: 150px; height: auto;"> </h2>
+  <div style="text-align: center; margin-bottom: 20px;">
+    <img src="i yigerdan.png" alt="i yigerdan" style="width: 150px; height: auto;">
+  </div>
 
+  <!-- SECTION LECTEUR VIDEO MODERNE -->
   <div class="player-container">
-    <video id="videoPlayer" controls>
-      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-      Votre navigateur ne supporte pas la lecture de vidéos.
+    <video id="videoPlayer" playsinline controls>
+      <source src="https://player.odycdn.com/api/v3/streams/free/amghar-aneghrum/a1546c656ba55bc422bc7c2fab77ee83b2c7de65/f7e874.mp4" type="video/mp4">
     </video>
   </div>
 
+  <!-- GRILLE DES FILMS -->
   <div class="movies-grid">
     
-    <div class="card" onclick="playVideo('https://www.w3schools.com/html/mov_bbb.mp4')">
-      <img src="https://m.media-amazon.com/images/M/MV5BNjRjYzNjNjEtYmEyNi00NjI5LTk3NmUtNWRhMjE0Y2FjOWZhXkEyXkFqcGc@._V1_.jpg" alt="Animated movie thumbnail for Amɣar aneɣrum showing a smiling cartoon character on a vibrant background">
+    <div class="card" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/amghar-aneghrum/a1546c656ba55bc422bc7c2fab77ee83b2c7de65/f7e874.mp4')">
+      <img src="https://m.media-amazon.com/images/M/MV5BNjRjYzNjNjEtYmEyNi00NjI5LTk3NmUtNWRhMjE0Y2FjOWZhXkEyXkFqcGc@._V1_.jpg" alt="Amɣar aneɣrum">
       <h3>Amɣar aneɣrum</h3>
     </div>
 
-    <div class="card" onclick="playVideo('https://www.w3schools.com/html/movie.mp4')">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKmpql0trkEuNupCZxevr8jj3ZcA4DiC9gH7UfvSSGVIaMXYHUN3TtJO_M-857xhXhlpSmujFPp0LZRp1uvy6V8jChKi-AbbfECO_Zlw&s=10" alt="Animated movie thumbnail showing a colorful cartoon character on a bright background">
+    <div class="card" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/224565zkkkzzzexnxkwolwknzeez/a38712163f906a1f02bd501f93433040003f1f8b/61d614.mp4')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKmpql0trkEuNupCZxevr8jj3ZcA4DiC9gH7UfvSSGVIaMXYHUN3TtJO_M-857xhXhlpSmujFPp0LZRp1uvy6V8jChKi-AbbfECO_Zlw&s=10" alt="kulla">
       <h3>kulla</h3>
     </div>
 
     <div class="card" onclick="playVideo('https://www.w3schools.com/html/mov_bbb.mp4')">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Animated movie thumbnail showing a stylized cartoon character with vivid colors">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry</h3>
     </div>
 
     <div class="card" onclick="playVideo('https://www.w3schools.com/html/movie.mp4')">
-      <img src="https://asekles.online/Sans%20titre6.jpg" alt="Animated movie thumbnail showing playful cartoon characters on a lively colored background">
+      <img src="https://asekles.online/Sans%20titre6.jpg" alt="Maca akked micka">
       <h3>Maca akked micka</h3>
     </div>
 
   </div>
-
 </div>
 
 <footer>
   ISSIN YID-NEƔ &copy; 2024
 </footer>
 
+<!-- Script du lecteur Plyr -->
+<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+
 <script>
-  function playVideo(videoUrl) {
-    const player = document.getElementById("videoPlayer");
-    player.src = videoUrl;
+  // Initialisation du lecteur moderne
+  const player = new Plyr('#videoPlayer', {
+    controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+    tooltips: { controls: true, seek: true }
+  });
+
+  // Fonction pour changer de vidéo
+  function playVideo(url) {
+    const videoElement = document.getElementById('videoPlayer');
+    
+    // On met à jour la source
+    videoElement.src = url;
+    
+    // On lance la lecture
     player.play();
     
-    // Scroll automatique vers le haut pour voir la vidéo quand on clique sur une carte
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    // Scroll automatique vers le lecteur pour le confort de l'utilisateur
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  // Désactiver le clic droit sur le lecteur pour protéger un peu le contenu
+  document.querySelector('.player-container').addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+  });
 </script>
 
 </body>
