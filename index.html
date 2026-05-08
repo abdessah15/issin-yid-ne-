@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ISSIN YID-NEƔ</title>
   
-  <!-- Style pour le lecteur moderne Plyr -->
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
   
   <style>
@@ -35,19 +34,103 @@
       margin: 0 auto;
     }
 
+    /* BARRE DE RECHERCHE ET SUGGESTIONS */
+    .search-wrapper {
+      position: relative;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-input-container {
+      position: relative;
+      flex-grow: 1;
+    }
+
+    .search-input-container input {
+      padding: 12px 15px;
+      width: 100%;
+      border-radius: 8px;
+      border: 2px solid rgb(0, 162, 255);
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .search-input-container input:focus {
+      border-color: #00ff40;
+    }
+
+    /* Liste des suggestions style YouTube */
+    .suggestions-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      color: black;
+      border-radius: 8px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+      z-index: 1000;
+      max-height: 250px;
+      overflow-y: auto;
+      margin-top: 5px;
+      display: none;
+      border: 1px solid #ccc;
+    }
+
+    .suggestion-item {
+      padding: 12px 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      transition: background 0.2s;
+    }
+
+    .suggestion-item:hover {
+      background: #f0f0f0;
+    }
+
+    .suggestion-item img {
+      width: 40px;
+      height: 25px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .search-btn {
+      padding: 10px 20px;
+      background: #00ff40;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .search-btn:hover {
+      background: #02d135;
+      transform: scale(1.05);
+    }
+
     /* LECTEUR MODERNE - Personnalisation */
     .player-container {
       margin-bottom: 40px;
       border-radius: 20px;
-      overflow: hidden; /* Pour que les coins de la vidéo soient arrondis */
-      border: 5px solid white;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      overflow: hidden;
+      border: 5px solid rgb(0, 217, 255);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
       background-color: black;
     }
 
-    /* Override Plyr colors to match your blue theme */
     :root {
-      --plyr-color-main: #00a2ff;
+      --plyr-color-main: linear-gradient(90deg, rgba(81,255,0,1) 0%, rgb(200, 255, 0) 100%);
     }
 
     /* GRILLE DES FILMS */
@@ -103,37 +186,80 @@
 </header>
 
 <div class="container">
+  
+  <div class="search-wrapper">
+    <div class="search-input-container">
+      <input type="text" id="searchInput" placeholder="Nadi ɣef tmeẓrut..." aria-label="Recherche de film" autocomplete="off">
+      <div class="suggestions-list" id="suggestionsList"></div>
+    </div>
+    <button class="search-btn" id="searchBtn">Sken-d</button>
+  </div>
 
   <div style="text-align: center; margin-bottom: 20px;">
     <img src="i yigerdan.png" alt="i yigerdan" style="width: 150px; height: auto;">
   </div>
 
-  <!-- SECTION LECTEUR VIDEO MODERNE -->
   <div class="player-container">
     <video id="videoPlayer" playsinline controls>
       <source src="https://player.odycdn.com/api/v3/streams/free/amghar-aneghrum/a1546c656ba55bc422bc7c2fab77ee83b2c7de65/f7e874.mp4" type="video/mp4">
     </video>
   </div>
 
-  <!-- GRILLE DES FILMS -->
-  <div class="movies-grid">
+  <div class="movies-grid" id="moviesGrid">
     
-    <div class="card" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/amghar-aneghrum/a1546c656ba55bc422bc7c2fab77ee83b2c7de65/f7e874.mp4')">
+    <div class="card" data-title="Amɣar aneɣrum" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/amghar-aneghrum/a1546c656ba55bc422bc7c2fab77ee83b2c7de65/f7e874.mp4')">
       <img src="https://m.media-amazon.com/images/M/MV5BNjRjYzNjNjEtYmEyNi00NjI5LTk3NmUtNWRhMjE0Y2FjOWZhXkEyXkFqcGc@._V1_.jpg" alt="Amɣar aneɣrum">
       <h3>Amɣar aneɣrum</h3>
     </div>
 
-    <div class="card" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/224565zkkkzzzexnxkwolwknzeez/a38712163f906a1f02bd501f93433040003f1f8b/61d614.mp4')">
+    <div class="card" data-title="kulla" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/224565zkkkzzzexnxkwolwknzeez/a38712163f906a1f02bd501f93433040003f1f8b/61d614.mp4')">
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKmpql0trkEuNupCZxevr8jj3ZcA4DiC9gH7UfvSSGVIaMXYHUN3TtJO_M-857xhXhlpSmujFPp0LZRp1uvy6V8jChKi-AbbfECO_Zlw&s=10" alt="kulla">
       <h3>kulla</h3>
     </div>
 
-    <div class="card" onclick="playVideo('https://www.w3schools.com/html/mov_bbb.mp4')">
+    <div class="card" data-title="Ṭum akked Jerry - Taxatemt deg uḍad" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(1)/7eeaf1d10281d84a7792a34b8a0df6151adcbee4/d062a3.mp4')">
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
-      <h3>Ṭum akked Jerry</h3>
+      <h3>Ṭum akked Jerry - Taxatemt deg uḍad</h3>
     </div>
 
-    <div class="card" onclick="playVideo('https://www.w3schools.com/html/movie.mp4')">
+    <div class="card" data-title="Ṭum akked Jerry - selmed-iyi ad afgeɣ" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(2)/65c81b3936ee4506f56fd0d32fb13fee7560ee93/ba1e13.mp4')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
+      <h3>Ṭum akked Jerry - selmed-iyi ad afgeɣ</h3>
+    </div>
+
+    <div class="card" data-title="Ṭum akked Jerry - ad tt-imɣur" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(3)/ab187d2db14d377915d4269b876211615e4be47a/ca5ee9.mp4')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
+      <h3>Ṭum akked Jerry - ad tt-imɣur</h3>
+    </div>
+
+    <div class="card" data-title="Ṭum akked Jerry - Ṭum akked Upanda" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(4)/db7529776aeb2badbfa87bd64b0daef95631389f/7bc052.mp4')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
+      <h3>Ṭum akked Jerry - Ṭum akked Upanda</h3>
+    </div>
+
+    <div class="card" data-title="Ṭum akked Jerry - Lfil iteddun yeṭṭes" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(5)/6109f2d4d4e2ca29bc6321d7e84605ae48559453/2d6033.mp4')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
+      <h3>Ṭum akked Jerry - Lfil iteddun yeṭṭes</h3>
+    </div>
+
+    <div class="card" data-title="Ṭum akked Jerry - Timesrifegt n lkaɣeḍ" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(6)/3f76507add658b8cd6b89e26411d228454ccb6ef/454258.mp4')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
+      <h3>Ṭum akked Jerry - Timesrifegt n lkaɣeḍ</h3>
+    </div>
+      <div class="card" data-title="Ṭum akked Jerry " onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(7)/16dbc2cb38564cdf7414750a453a0c93224211b6/c1ebbd.mp4')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
+      <h3>Ṭum akked Jerry - selmed-iyi ad afgeɣ</h3>
+    </div>
+        <div class="card" data-title="Ṭum akked Jerry " onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(8)/abd163bd5450d8b5a5c7a3e522f0d21646911d92/b39523.mp4')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
+      <h3>Ṭum akked Jerry - Ţata</h3>
+    </div>
+            <div class="card" data-title="Ṭum akked Jerry " onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(9)/de7836279369210b7951ac822bb60babc4a5eff9/63124a.mp4')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
+      <h3>Ṭum akked Jerry - Taseqqart</h3>
+    </div>
+
+    <div class="card" data-title="Maca akked micka" onclick="playVideo('https://www.w3schools.com/html/movie.mp4')">
       <img src="https://asekles.online/Sans%20titre6.jpg" alt="Maca akked micka">
       <h3>Maca akked micka</h3>
     </div>
@@ -145,33 +271,123 @@
   ISSIN YID-NEƔ &copy; 2024
 </footer>
 
-<!-- Script du lecteur Plyr -->
 <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
 
 <script>
   // Initialisation du lecteur moderne
   const player = new Plyr('#videoPlayer', {
     controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+    i18n: {
+      play: 'Seddu',
+      mute: 'Asgugem',
+      unmute: 'Kkes asgugem',
+      enterFullscreen: 'Askan n ugdil s teɣzi',
+      exitFullscreen: 'Ffeɣ seg ugdil s teɣzi',
+      pause: 'Ḥbes',
+    },
     tooltips: { controls: true, seek: true }
   });
 
   // Fonction pour changer de vidéo
   function playVideo(url) {
     const videoElement = document.getElementById('videoPlayer');
-    
-    // On met à jour la source
     videoElement.src = url;
-    
-    // On lance la lecture
     player.play();
-    
-    // Scroll automatique vers le lecteur pour le confort de l'utilisateur
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Désactiver le clic droit sur le lecteur pour protéger un peu le contenu
+  // Désactiver le clic droit sur le lecteur
   document.querySelector('.player-container').addEventListener("contextmenu", function(e) {
     e.preventDefault();
+  });
+
+  // --- LOGIQUE DE RECHERCHE ET DE SUGGESTIONS ---
+
+  const searchInput = document.getElementById('searchInput');
+  const suggestionsList = document.getElementById('suggestionsList');
+  const searchBtn = document.getElementById('searchBtn');
+  const cards = document.querySelectorAll('.card');
+
+  // 1. Récupération des données de vidéos directement depuis le HTML existant
+  const videosData = Array.from(cards).map(card => {
+    return {
+      title: card.querySelector('h3').textContent,
+      img: card.querySelector('img').src,
+      url: card.getAttribute('onclick').match(/'([^']+)'/)[1], // Extrait l'URL du onclick
+      element: card
+    };
+  });
+
+  // 2. Gestion de la saisie utilisateur (Saisie en direct)
+  searchInput.addEventListener('input', function() {
+    const query = this.value.toLowerCase().trim();
+    suggestionsList.innerHTML = '';
+
+    if (query === '') {
+      suggestionsList.style.display = 'none';
+      return;
+    }
+
+    // Filtrer les vidéos correspondantes
+    const filtered = videosData.filter(video => 
+      video.title.toLowerCase().includes(query)
+    );
+
+    if (filtered.length > 0) {
+      filtered.forEach(video => {
+        // Créer l'élément de suggestion
+        const item = document.createElement('div');
+        item.className = 'suggestion-item';
+        item.innerHTML = `
+          <img src="${video.img}" alt="${video.title}">
+          <span>${video.title}</span>
+        `;
+
+        // Événement au clic sur une suggestion
+        item.addEventListener('click', () => {
+          searchInput.value = video.title;
+          suggestionsList.style.display = 'none';
+          playVideo(video.url); // Lance la vidéo immédiatement
+        });
+
+        suggestionsList.appendChild(item);
+      });
+      suggestionsList.style.display = 'block';
+    } else {
+      suggestionsList.style.display = 'none';
+    }
+  });
+
+  // 3. Fermer les suggestions si on clique à l'extérieur
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.search-input-container')) {
+      suggestionsList.style.display = 'none';
+    }
+  });
+
+  // 4. Fonction de filtrage globale (quand on appuie sur Entrée ou sur le bouton "Filtre")
+  function filterGrid() {
+    const query = searchInput.value.toLowerCase().trim();
+    
+    cards.forEach(card => {
+      const title = card.querySelector('h3').textContent.toLowerCase();
+      if (title.includes(query)) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    suggestionsList.style.display = 'none';
+  }
+
+  // Événement bouton
+  searchBtn.addEventListener('click', filterGrid);
+
+  // Événement touche Entrée
+  searchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      filterGrid();
+    }
   });
 </script>
 
