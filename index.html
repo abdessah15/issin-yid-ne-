@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ISSIN YID-NEƔ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>DDUḤ-IW</title>
   
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
   
@@ -13,6 +13,23 @@
       padding: 0;
       box-sizing: border-box;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      
+      /* Désactivation globale de la sélection de texte */
+      -webkit-user-select: none; /* Safari */
+      -moz-user-select: none;    /* Firefox */
+      -ms-user-select: none;     /* IE/Edge */
+      user-select: none;         /* Standard */
+      
+      /* Limite les gestes de double-tap pour zoomer */
+      touch-action: manipulation;
+    }
+
+    /* Permettre la sélection de texte UNIQUEMENT dans la barre de recherche */
+    input[type="text"] {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
     }
 
     body {
@@ -182,7 +199,7 @@
 <body>
 
 <header>
-  <img src="issin yid-neɣ.png" alt="ISSIN YID-NEƔ" style="width: 280px; height: auto;">
+  <img src="dduḥ-iw.png" alt="DDUḤ-IW" style="width: 280px; height: auto;">
 </header>
 
 <div class="container">
@@ -246,15 +263,18 @@
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry - Timesrifegt n lkaɣeḍ</h3>
     </div>
-      <div class="card" data-title="Ṭum akked Jerry " onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(7)/16dbc2cb38564cdf7414750a453a0c93224211b6/c1ebbd.mp4')">
+    
+    <div class="card" data-title="Ṭum akked Jerry - selmed-iyi ad afgeɣ (2)" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(7)/16dbc2cb38564cdf7414750a453a0c93224211b6/c1ebbd.mp4')">
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry - selmed-iyi ad afgeɣ</h3>
     </div>
-        <div class="card" data-title="Ṭum akked Jerry " onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(8)/abd163bd5450d8b5a5c7a3e522f0d21646911d92/b39523.mp4')">
+    
+    <div class="card" data-title="Ṭum akked Jerry - Ţata" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(8)/abd163bd5450d8b5a5c7a3e522f0d21646911d92/b39523.mp4')">
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry - Ţata</h3>
     </div>
-            <div class="card" data-title="Ṭum akked Jerry " onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(9)/de7836279369210b7951ac822bb60babc4a5eff9/63124a.mp4')">
+    
+    <div class="card" data-title="Ṭum akked Jerry - Taseqqart" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(9)/de7836279369210b7951ac822bb60babc4a5eff9/63124a.mp4')">
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry - Taseqqart</h3>
     </div>
@@ -268,13 +288,13 @@
 </div>
 
 <footer>
-  ISSIN YID-NEƔ &copy; 2024
+  DDUḤ-IW
 </footer>
 
 <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
 
 <script>
-  // Initialisation du lecteur moderne
+  // Initialisation du lecteur moderne Plyr
   const player = new Plyr('#videoPlayer', {
     controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
     i18n: {
@@ -288,10 +308,17 @@
     tooltips: { controls: true, seek: true }
   });
 
-  // Fonction pour changer de vidéo
+  // Fonction CORRIGÉE pour changer de vidéo proprement avec Plyr
   function playVideo(url) {
-    const videoElement = document.getElementById('videoPlayer');
-    videoElement.src = url;
+    player.source = {
+      type: 'video',
+      sources: [
+        {
+          src: url,
+          type: 'video/mp4',
+        }
+      ]
+    };
     player.play();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -300,6 +327,22 @@
   document.querySelector('.player-container').addEventListener("contextmenu", function(e) {
     e.preventDefault();
   });
+
+  // Empêcher le zoom par double-tap sur mobile
+  document.addEventListener('touchstart', function (event) {
+    if (event.touches.length > 1) {
+      event.preventDefault(); // Empêche le pincement pour zoomer (pinch-to-zoom)
+    }
+  }, { passive: false });
+
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function (event) {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+      event.preventDefault(); // Empêche le zoom au double-tap rapide
+    }
+    lastTouchEnd = now;
+  }, false);
 
   // --- LOGIQUE DE RECHERCHE ET DE SUGGESTIONS ---
 
