@@ -49,6 +49,7 @@
       padding: 20px;
       max-width: 1000px;
       margin: 0 auto;
+      position: relative;
     }
 
     /* BARRE DE RECHERCHE ET SUGGESTIONS */
@@ -144,6 +145,7 @@
       border: 5px solid rgb(0, 217, 255);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
       background-color: black;
+      position: relative;
     }
 
     :root {
@@ -158,6 +160,7 @@
     }
 
     .card {
+      position: relative; /* Nécessaire pour positionner l'égaliseur audio */
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(8px);
       border-radius: 15px;
@@ -184,6 +187,121 @@
       text-align: center;
       font-size: 16px;
       background: rgba(0, 0, 0, 0.7);
+    }
+
+    /* --- EFFET VISUEL D'ONDES SONORES --- */
+    .audio-wave-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 160px; /* Aligné sur la hauteur de l'image de la carte */
+      background: rgba(0, 0, 0, 0.6);
+      display: none; /* Masqué par défaut */
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      z-index: 2;
+    }
+
+    /* Les barres d'ondes */
+    .audio-bar {
+      width: 6px;
+      height: 10px;
+      background-color: #00ff40;
+      border-radius: 3px;
+      animation: soundWave 0.8s ease-in-out infinite alternate;
+      animation-play-state: paused; /* En pause par défaut */
+    }
+
+    /* Décalages d'animation pour rendre l'effet réaliste */
+    .audio-bar:nth-child(1) { animation-delay: 0.1s; }
+    .audio-bar:nth-child(2) { animation-delay: 0.4s; }
+    .audio-bar:nth-child(3) { animation-delay: 0.2s; }
+    .audio-bar:nth-child(4) { animation-delay: 0.6s; }
+    .audio-bar:nth-child(5) { animation-delay: 0.3s; }
+
+    @keyframes soundWave {
+      0% { height: 10px; }
+      100% { height: 60px; }
+    }
+
+    /* Classe active pour afficher l'effet */
+    .card.playing .audio-wave-overlay {
+      display: flex;
+    }
+
+    .card.playing .audio-bar {
+      animation-play-state: running;
+    }
+
+    /* --- POPUP VIDÉO SUIVANTE (STYLE YOUTUBE - 10 SECONDES AVANT FIN) --- */
+    .next-video-popup {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #00ff40;
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      z-index: 10;
+      cursor: pointer;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform: translateY(100px);
+      opacity: 0;
+      pointer-events: none;
+      max-width: 320px;
+    }
+
+    .next-video-popup.show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .next-video-popup:hover {
+      transform: scale(1.03);
+      border-color: #00d9ff;
+    }
+
+    .popup-thumb {
+      width: 80px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .popup-info {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .popup-label {
+      font-size: 11px;
+      color: #00ff40;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .popup-title {
+      font-size: 13px;
+      color: #fff;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+    }
+
+    .popup-timer {
+      font-size: 11px;
+      color: #aaa;
     }
 
     footer {
@@ -220,66 +338,111 @@
     <video id="videoPlayer" playsinline controls>
       <source src="https://player.odycdn.com/api/v3/streams/free/amghar-aneghrum/a1546c656ba55bc422bc7c2fab77ee83b2c7de65/f7e874.mp4" type="video/mp4">
     </video>
+    
+    <div class="next-video-popup" id="nextVideoPopup">
+      <img src="" alt="Miniature" class="popup-thumb" id="popupThumb">
+      <div class="popup-info">
+        <span class="popup-label">Tin i d-iteddun</span>
+        <span class="popup-title" id="popupTitle">Titre de la vidéo</span>
+        <span class="popup-timer" id="popupTimer">Ad ɛeddi deg 10 s...</span>
+      </div>
+    </div>
   </div>
 
   <div class="movies-grid" id="moviesGrid">
     
     <div class="card" data-title="Amɣar aneɣrum" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/amghar-aneghrum/a1546c656ba55bc422bc7c2fab77ee83b2c7de65/f7e874.mp4')">
+      <div class="audio-wave-overlay">
+        <div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div>
+      </div>
       <img src="https://m.media-amazon.com/images/M/MV5BNjRjYzNjNjEtYmEyNi00NjI5LTk3NmUtNWRhMjE0Y2FjOWZhXkEyXkFqcGc@._V1_.jpg" alt="Amɣar aneɣrum">
       <h3>Amɣar aneɣrum</h3>
     </div>
 
     <div class="card" data-title="kulla" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/224565zkkkzzzexnxkwolwknzeez/a38712163f906a1f02bd501f93433040003f1f8b/61d614.mp4')">
+      <div class="audio-wave-overlay">
+        <div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div>
+      </div>
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKmpql0trkEuNupCZxevr8jj3ZcA4DiC9gH7UfvSSGVIaMXYHUN3TtJO_M-857xhXhlpSmujFPp0LZRp1uvy6V8jChKi-AbbfECO_Zlw&s=10" alt="kulla">
       <h3>kulla</h3>
     </div>
 
     <div class="card" data-title="Ṭum akked Jerry - Taxatemt deg uḍad" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(1)/7eeaf1d10281d84a7792a34b8a0df6151adcbee4/d062a3.mp4')">
+      <div class="audio-wave-overlay">
+        <div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div>
+      </div>
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry - Taxatemt deg uḍad</h3>
     </div>
 
     <div class="card" data-title="Ṭum akked Jerry - selmed-iyi ad afgeɣ" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(2)/65c81b3936ee4506f56fd0d32fb13fee7560ee93/ba1e13.mp4')">
+      <div class="audio-wave-overlay">
+        <div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div>
+      </div>
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry - selmed-iyi ad afgeɣ</h3>
     </div>
 
     <div class="card" data-title="Ṭum akked Jerry - ad tt-imɣur" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(3)/ab187d2db14d377915d4269b876211615e4be47a/ca5ee9.mp4')">
+      <div class="audio-wave-overlay">
+        <div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div>
+      </div>
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry - ad tt-imɣur</h3>
     </div>
 
     <div class="card" data-title="Ṭum akked Jerry - Ṭum akked Upanda" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(4)/db7529776aeb2badbfa87bd64b0daef95631389f/7bc052.mp4')">
+      <div class="audio-wave-overlay">
+        <div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div>
+      </div>
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry - Ṭum akked Upanda</h3>
     </div>
 
     <div class="card" data-title="Ṭum akked Jerry - Lfil iteddun yeṭṭes" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(5)/6109f2d4d4e2ca29bc6321d7e84605ae48559453/2d6033.mp4')">
+      <div class="audio-wave-overlay">
+        <div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div>
+      </div>
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry - Lfil iteddun yeṭṭes</h3>
     </div>
 
     <div class="card" data-title="Ṭum akked Jerry - Timesrifegt n lkaɣeḍ" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(6)/3f76507add658b8cd6b89e26411d228454ccb6ef/454258.mp4')">
+      <div class="audio-wave-overlay">
+        <div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div>
+      </div>
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry - Timesrifegt n lkaɣeḍ</h3>
     </div>
     
     <div class="card" data-title="Ṭum akked Jerry - selmed-iyi ad afgeɣ (2)" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(7)/16dbc2cb38564cdf7414750a453a0c93224211b6/c1ebbd.mp4')">
+      <div class="audio-wave-overlay">
+        <div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div>
+      </div>
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry - selmed-iyi ad afgeɣ</h3>
     </div>
     
     <div class="card" data-title="Ṭum akked Jerry - Ţata" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(8)/abd163bd5450d8b5a5c7a3e522f0d21646911d92/b39523.mp4')">
+      <div class="audio-wave-overlay">
+        <div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div>
+      </div>
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry - Ţata</h3>
     </div>
     
     <div class="card" data-title="Ṭum akked Jerry - Taseqqart" onclick="playVideo('https://player.odycdn.com/api/v3/streams/free/tom-ak-d-jerry-EP-(9)/de7836279369210b7951ac822bb60babc4a5eff9/63124a.mp4')">
+      <div class="audio-wave-overlay">
+        <div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div>
+      </div>
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgjA8PxHRh-TtWBfD3--wcc--MfzctoX57Gg&s" alt="Ṭum akked Jerry">
       <h3>Ṭum akked Jerry - Taseqqart</h3>
     </div>
 
     <div class="card" data-title="Maca akked micka" onclick="playVideo('https://www.w3schools.com/html/movie.mp4')">
+      <div class="audio-wave-overlay">
+        <div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div><div class="audio-bar"></div>
+      </div>
       <img src="https://asekles.online/Sans%20titre6.jpg" alt="Maca akked micka">
       <h3>Maca akked micka</h3>
     </div>
@@ -308,60 +471,186 @@
     tooltips: { controls: true, seek: true }
   });
 
-  // Fonction CORRIGÉE pour changer de vidéo proprement avec Plyr
+  const rawVideoElement = document.getElementById('videoPlayer');
+  const popup = document.getElementById('nextVideoPopup');
+  const popupThumb = document.getElementById('popupThumb');
+  const popupTitle = document.getElementById('popupTitle');
+  const popupTimer = document.getElementById('popupTimer');
+
+  let nextVideoUrl = null;
+  let popupShown = false;
+
+  // --- HISTORIQUE DES VIDÉOS LUES ---
+  let playedVideos = [];
+
+  // Récupère la PROCHAINE vidéo disponible qui n'a pas encore été lue
+  function getNextCard() {
+    const grid = document.getElementById('moviesGrid');
+    const allCards = Array.from(grid.querySelectorAll('.card'));
+    
+    // Filtrer les cartes visibles (non cachées par la recherche)
+    const visibleCards = allCards.filter(card => card.style.display !== 'none');
+    
+    // Trouver les cartes visibles qui n'ont pas encore été lues
+    const unplayedCards = visibleCards.filter(card => {
+      const onclickAttr = card.getAttribute('onclick');
+      const url = onclickAttr.match(/'([^']+)'/)[1];
+      return !playedVideos.includes(url);
+    });
+
+    // Si toutes les vidéos visibles ont été lues, on vide l'historique pour recommencer une boucle complète
+    if (unplayedCards.length === 0) {
+      playedVideos = [];
+      // On retourne la première carte visible (qui n'est pas celle qui joue actuellement s'il y en a d'autres)
+      const currentActiveCard = grid.querySelector('.card.playing');
+      const fallbackCards = visibleCards.filter(card => card !== currentActiveCard);
+      return fallbackCards.length > 0 ? fallbackCards[0] : visibleCards[0];
+    }
+
+    // Sinon, on prend la première vidéo non lue de la liste
+    return unplayedCards[0];
+  }
+
+  // Fonction CORRIGÉE pour changer de vidéo et forcer son rafraîchissement au niveau du navigateur
   function playVideo(url) {
+    // Ferme le popup d'aperçu
+    popup.classList.remove('show');
+    popupShown = false;
+
+    // Ajouter la vidéo en cours de lecture à l'historique des vidéos lues
+    if (!playedVideos.includes(url)) {
+      playedVideos.push(url);
+    }
+
+    // Correction du blocage : On réinitialise proprement la source HTML5 native du DOM
+    rawVideoElement.src = url;
+    rawVideoElement.load(); 
+
+    // Mise à jour de l'objet Plyr
     player.source = {
       type: 'video',
-      sources: [
-        {
-          src: url,
-          type: 'video/mp4',
-        }
-      ]
+      sources: [{ src: url, type: 'video/mp4' }]
     };
-    player.play();
+
+    // Forcer le play après le chargement des métadonnées
+    player.once('ready', () => {
+      player.play().catch(e => {
+        console.log("Lecture automatique bloquée par le navigateur, attente d'interaction.");
+      });
+    });
+
+    // En cas de secours direct si ready tarde à se lancer
+    setTimeout(() => {
+      player.play().catch(() => {});
+    }, 150);
+    
+    // Gestion visuelle des cartes dans la grille
+    const grid = document.getElementById('moviesGrid');
+    const targetCard = Array.from(grid.querySelectorAll('.card')).find(card => {
+      return card.getAttribute('onclick').includes(url);
+    });
+
+    if (targetCard) {
+      grid.querySelectorAll('.card').forEach(c => c.classList.remove('playing'));
+      targetCard.classList.add('playing');
+      grid.insertBefore(targetCard, grid.firstChild);
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Désactiver le clic droit sur le lecteur
-  document.querySelector('.player-container').addEventListener("contextmenu", function(e) {
-    e.preventDefault();
+  // --- Gestion du Popup 10 secondes avant la fin ---
+  player.on('timeupdate', () => {
+    const duration = player.duration;
+    const currentTime = player.currentTime;
+
+    if (duration > 15) { // Uniquement sur les vidéos de plus de 15 secondes
+      const timeLeft = Math.ceil(duration - currentTime);
+
+      if (timeLeft <= 10 && timeLeft > 0) {
+        if (!popupShown) {
+          const nextCard = getNextCard();
+          if (nextCard) {
+            const title = nextCard.querySelector('h3').textContent;
+            const imgSrc = nextCard.querySelector('img').src;
+            const onclickAttr = nextCard.getAttribute('onclick');
+            nextVideoUrl = onclickAttr.match(/'([^']+)'/)[1];
+
+            // Remplir le popup
+            popupThumb.src = imgSrc;
+            popupTitle.textContent = title;
+            popup.classList.add('show');
+            popupShown = true;
+          }
+        }
+        popupTimer.textContent = `Ad ɛeddi deg ${timeLeft} s...`;
+      } else if (timeLeft > 10) {
+        popup.classList.remove('show');
+        popupShown = false;
+      }
+    }
   });
 
-  // Empêcher le zoom par double-tap sur mobile
-  document.addEventListener('touchstart', function (event) {
-    if (event.touches.length > 1) {
-      event.preventDefault(); // Empêche le pincement pour zoomer (pinch-to-zoom)
+  // Clic sur le popup pour lancer la vidéo suivante immédiatement
+  popup.addEventListener('click', () => {
+    if (nextVideoUrl) {
+      playVideo(nextVideoUrl);
     }
+  });
+
+  // Enchaînement si l'utilisateur n'a pas cliqué d'ici la fin
+  player.on('ended', () => {
+    popup.classList.remove('show');
+    popupShown = false;
+    const nextCard = getNextCard();
+    if (nextCard) {
+      const onclickAttr = nextCard.getAttribute('onclick');
+      const nextUrl = onclickAttr.match(/'([^']+)'/)[1];
+      playVideo(nextUrl);
+    }
+  });
+
+  // --- Événements Plyr d'animation de l'égaliseur ---
+  player.on('play', () => {
+    document.querySelectorAll('.card.playing .audio-bar').forEach(bar => {
+      bar.style.animationPlayState = 'running';
+    });
+  });
+
+  player.on('pause', () => {
+    document.querySelectorAll('.card.playing .audio-bar').forEach(bar => {
+      bar.style.animationPlayState = 'paused';
+    });
+  });
+
+  // Désactiver le menu contextuel sur le lecteur
+  document.querySelector('.player-container').addEventListener("contextmenu", e => e.preventDefault());
+
+  // Désactiver le zoom double-tap sur mobile
+  document.addEventListener('touchstart', e => {
+    if (e.touches.length > 1) e.preventDefault();
   }, { passive: false });
 
   let lastTouchEnd = 0;
-  document.addEventListener('touchend', function (event) {
+  document.addEventListener('touchend', e => {
     const now = (new Date()).getTime();
-    if (now - lastTouchEnd <= 300) {
-      event.preventDefault(); // Empêche le zoom au double-tap rapide
-    }
+    if (now - lastTouchEnd <= 300) e.preventDefault();
     lastTouchEnd = now;
   }, false);
 
-  // --- LOGIQUE DE RECHERCHE ET DE SUGGESTIONS ---
-
+  // --- LOGIQUE DE RECHERCHE ---
   const searchInput = document.getElementById('searchInput');
   const suggestionsList = document.getElementById('suggestionsList');
   const searchBtn = document.getElementById('searchBtn');
   const cards = document.querySelectorAll('.card');
 
-  // 1. Récupération des données de vidéos directement depuis le HTML existant
-  const videosData = Array.from(cards).map(card => {
-    return {
-      title: card.querySelector('h3').textContent,
-      img: card.querySelector('img').src,
-      url: card.getAttribute('onclick').match(/'([^']+)'/)[1], // Extrait l'URL du onclick
-      element: card
-    };
-  });
+  const videosData = Array.from(cards).map(card => ({
+    title: card.querySelector('h3').textContent,
+    img: card.querySelector('img').src,
+    url: card.getAttribute('onclick').match(/'([^']+)'/)[1],
+    element: card
+  }));
 
-  // 2. Gestion de la saisie utilisateur (Saisie en direct)
   searchInput.addEventListener('input', function() {
     const query = this.value.toLowerCase().trim();
     suggestionsList.innerHTML = '';
@@ -371,28 +660,18 @@
       return;
     }
 
-    // Filtrer les vidéos correspondantes
-    const filtered = videosData.filter(video => 
-      video.title.toLowerCase().includes(query)
-    );
+    const filtered = videosData.filter(v => v.title.toLowerCase().includes(query));
 
     if (filtered.length > 0) {
       filtered.forEach(video => {
-        // Créer l'élément de suggestion
         const item = document.createElement('div');
         item.className = 'suggestion-item';
-        item.innerHTML = `
-          <img src="${video.img}" alt="${video.title}">
-          <span>${video.title}</span>
-        `;
-
-        // Événement au clic sur une suggestion
+        item.innerHTML = `<img src="${video.img}" alt="${video.title}"><span>${video.title}</span>`;
         item.addEventListener('click', () => {
           searchInput.value = video.title;
           suggestionsList.style.display = 'none';
-          playVideo(video.url); // Lance la vidéo immédiatement
+          playVideo(video.url);
         });
-
         suggestionsList.appendChild(item);
       });
       suggestionsList.style.display = 'block';
@@ -401,37 +680,21 @@
     }
   });
 
-  // 3. Fermer les suggestions si on clique à l'extérieur
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('.search-input-container')) {
-      suggestionsList.style.display = 'none';
-    }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.search-input-container')) suggestionsList.style.display = 'none';
   });
 
-  // 4. Fonction de filtrage globale (quand on appuie sur Entrée ou sur le bouton "Filtre")
   function filterGrid() {
     const query = searchInput.value.toLowerCase().trim();
-    
     cards.forEach(card => {
       const title = card.querySelector('h3').textContent.toLowerCase();
-      if (title.includes(query)) {
-        card.style.display = 'block';
-      } else {
-        card.style.display = 'none';
-      }
+      card.style.display = title.includes(query) ? 'block' : 'none';
     });
     suggestionsList.style.display = 'none';
   }
 
-  // Événement bouton
   searchBtn.addEventListener('click', filterGrid);
-
-  // Événement touche Entrée
-  searchInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      filterGrid();
-    }
-  });
+  searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') filterGrid(); });
 </script>
 
 </body>
